@@ -90,15 +90,11 @@ jobs:
         run: |
           docker tag warehouse_backend mustafanahas/warehouse-backend:latest
           docker tag warehouse_backend mustafanahas/warehouse-backend:${{ github.sha }}
-          docker tag warehouse_frontend mustafanahas/warehouse-frontend:latest
-          docker tag warehouse_frontend mustafanahas/warehouse-frontend:${{ github.sha }}
 
       - name: Push Docker Images to DockerHub
         run: |
           docker push mustafanahas/warehouse-backend:latest
           docker push mustafanahas/warehouse-backend:${{ github.sha }}
-          docker push mustafanahas/warehouse-frontend:latest
-          docker push mustafanahas/warehouse-frontend:${{ github.sha }}
 
       - name: Deploy with Docker Compose
         run: docker compose up -d
