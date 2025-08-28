@@ -63,7 +63,7 @@
 	</dependencies>
 
 	<build>
-		<finalName>WarehouseApp</finalName>
+		<finalName>App</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
