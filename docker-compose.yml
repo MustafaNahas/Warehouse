@@ -25,9 +25,3 @@ services:
     ports:
       - "8080:8080"
 
-  frontend:
-    build: ./frontend
-    image: warehouse_frontend
-    container_name: warehouse-frontend
-    ports:
-      - "3000:3000"
