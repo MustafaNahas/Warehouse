@@ -1,6 +1,6 @@
 .idea
 *.iml
-
+.env
 
 #backend
 /backend/HELP.md
