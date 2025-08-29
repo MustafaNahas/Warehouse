@@ -58,7 +58,7 @@ jobs:
           name: app-jar
           path: backend/target/App.jar
 
-  docker-compose-deploy:
+  push-to-docker-hub:
     needs: build-backend
     runs-on: ubuntu-latest
     steps:
@@ -77,24 +77,8 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
-      - name: Create .env file for Docker Compose
-        run: |
-          echo "POSTGRES_DB=${{ secrets.POSTGRES_DB }}" >> .env
-          echo "POSTGRES_USER=${{ secrets.POSTGRES_USER }}" >> .env
-          echo "POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}" >> .env
+      - name: Build Docker image
+        run: docker build -t ${{ secrets.DOCKERHUB_TAG }} .
 
-      - name: Build Docker Compose Images
-        run: docker compose build
-
-      - name: Tag Docker Images for DockerHub
-        run: |
-          docker tag warehouse_backend mustafanahas/warehouse-backend:latest
-          docker tag warehouse_backend mustafanahas/warehouse-backend:${{ github.sha }}
-
-      - name: Push Docker Images to DockerHub
-        run: |
-          docker push mustafanahas/warehouse-backend:latest
-          docker push mustafanahas/warehouse-backend:${{ github.sha }}
-
-      - name: Deploy with Docker Compose
-        run: docker compose up -d
+      - name: Push Docker image
+        run: docker push ${{ secrets.DOCKERHUB_TAG }}
