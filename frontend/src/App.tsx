@@ -6,7 +6,7 @@ function App() {
 
   return (
 
-      <h2>Warehause</h2>
+      <h2>Warehouse</h2>
 
   )
 }

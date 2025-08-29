@@ -82,3 +82,11 @@ jobs:
 
       - name: Push Docker image
         run: docker push ${{ secrets.DOCKERHUB_TAG }}
+
+  deploy:
+    needs: push-to-docker-hub
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Render.com Deployment
+        run: |
+          curl -X POST ${{ secrets.RENDER_DEPLOY_HOOK }}
