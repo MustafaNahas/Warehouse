@@ -1,6 +1,5 @@
 package org.nahas.backend.controller;
 
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,6 +14,8 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.List;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -26,12 +27,14 @@ class ProductControllerTest {
     @Mock
     private ProductService service;
 
+    private ProductController controller;
+
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        ProductController controller = new ProductController(service);
+        controller = new ProductController(service);
         mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
     }
 
@@ -70,5 +73,48 @@ class ProductControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value("123"))
                 .andExpect(jsonPath("$.name").value("Water"));
+    }
+
+    @Test
+    void testGetById() throws Exception {
+        Product product = new Product();
+        product.setId("1");
+        product.setName("Cola");
+
+        when(service.getById("1")).thenReturn(product);
+
+        mockMvc.perform(get("/api/products/{id}", "1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value("1"))
+                .andExpect(jsonPath("$.name").value("Cola"));
+    }
+
+    @Test
+    void testUpdate() throws Exception {
+        ProductDto dto = new ProductDto();
+        dto.setName("Updated Cola");
+
+        Product updated = new Product();
+        updated.setId("1");
+        updated.setName("Updated Cola");
+
+        when(service.update(eq("1"), any(Product.class))).thenReturn(updated);
+
+        mockMvc.perform(put("/api/products/{id}", "1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(dto)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value("1"))
+                .andExpect(jsonPath("$.name").value("Updated Cola"));
+    }
+
+    @Test
+    void testDelete() throws Exception {
+        doNothing().when(service).delete("1");
+
+        mockMvc.perform(delete("/api/products/{id}", "1"))
+                .andExpect(status().isNoContent());
+
+        verify(service, times(1)).delete("1");
     }
 }
