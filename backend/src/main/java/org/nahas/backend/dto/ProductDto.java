@@ -13,6 +13,7 @@ public class ProductDto {
     private String id;
     private String name;
     private String barcode;
+    private double purchasePrice;
     private double salePrice;
     private int quantity;
     private String imageUrl;
