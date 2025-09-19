@@ -34,7 +34,10 @@ public class ProductController {
         Product product = service.getById(id);
         return ResponseEntity.ok(ProductMapper.toDto(product));
     }
-
+    @GetMapping("/categories")
+    public List<String> getAllCategories() {
+        return service.getAllCategories();
+    }
     @PostMapping
     public ResponseEntity<ProductDto> create(@RequestBody ProductDto dto) {
         Product saved = service.create(ProductMapper.toEntity(dto));

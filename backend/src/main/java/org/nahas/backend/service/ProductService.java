@@ -51,4 +51,12 @@ public class ProductService {
         }
         repository.deleteById(id);
     }
+
+    public List<String> getAllCategories() {
+        return repository.findAll()
+                .stream()
+                .map(Product::getCategorie)
+                .distinct().toList();
+
+    }
 }
