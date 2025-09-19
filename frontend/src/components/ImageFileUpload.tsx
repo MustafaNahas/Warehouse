@@ -72,7 +72,6 @@ if(!isUploaded){
     };
     return (
         <>
-            {console.log(imageUrl)}
             <TextField
                 fullWidth
                 label="Bild-URL"
